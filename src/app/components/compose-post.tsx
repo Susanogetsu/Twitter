@@ -9,6 +9,7 @@ function ComposePost({
     userAvatarUrl: string
 }
 ) {
+    // variable local para cambiar el texto
     const [text, setText] = useState('')
 
     const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
