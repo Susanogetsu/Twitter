@@ -2,6 +2,7 @@ import { LayoutProvider } from './LayoutProvider'
 import './globals.css'
 import type { Metadata } from 'next'
 import { Providers } from './providers'
+// import some toaster here
 
 export const metadata: Metadata = {
   title: 'Clon de twitter',
