@@ -2,7 +2,6 @@ import { LayoutProvider } from './LayoutProvider'
 import './globals.css'
 import type { Metadata } from 'next'
 import { Providers } from './providers'
-import { Toaster } from "sonner"
 
 export const metadata: Metadata = {
   title: 'Clon de twitter',
@@ -20,7 +19,6 @@ export default async function RootLayout({
         <link rel="shortcut icon" href="/favicon.ico" />
         <Providers>
           <LayoutProvider>
-          <Toaster richColors/>
             {children}
           </LayoutProvider>
         </Providers>
