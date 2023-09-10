@@ -58,3 +58,13 @@ import {nextui} from "@nextui-org/react";
   //creamos un provider para envolver la aplicación
   //crear archivo .npmrc
   public-hoist-pattern[]=*@nextui-org/*
+  // commit github
+  //iniciar git
+  git init
+  //crear o usar la rama main
+  git branch -M main
+  git add .
+  git commit -m "no toaster"
+  //conectar al repo de git
+  git remote add origin https://github.com/Susanogetsu/Twitter.git
+  git push -u origin main
