@@ -24,7 +24,6 @@ export default async function RootLayout({
           </LayoutProvider>
         </Providers>
       </body>
-
     </html>
   )
 }
