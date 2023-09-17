@@ -3,6 +3,7 @@ import { useState } from "react"
 import { addPost } from "../actions/add-post-action"
 import { ComposePostButton } from "./compose-post-button"
 import { Button } from "@nextui-org/react"
+import { toast } from "sonner"
 
 function ComposePost({
     userAvatarUrl
@@ -18,13 +19,16 @@ function ComposePost({
         setText(e.target.value)
     }
 
+    const handleCreateAction = async (formData: FormData) => {
+        await addPost(formData)
+        setText("")
+        toast.success("Post creado correctamente")
+    }
+
     return (
-        <form
-            action={async (formData) => {
-                await addPost(formData)
-                setText("")
-            }}
-            className="flex flex-row p-2 gap-2 border-b border-white/50 border-t">
+        <form className="flex flex-row p-2 gap-2 border-b border-white/50 border-t"
+            action={handleCreateAction}
+        >
             <img src={userAvatarUrl}
                 className="rounded-full w-12 h-12 object-contain" />
             <div className="flex flex-1 flex-col gap-y-4">

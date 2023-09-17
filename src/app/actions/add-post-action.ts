@@ -18,5 +18,6 @@ export const addPost = async (formData: FormData) => {
         content,
         user_id: user.id
     })
+    console.log(`Creando post con los datos: ${content.toString()}`)
     revalidatePath(`/?content=${content.toString()}`)
 }

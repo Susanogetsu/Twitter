@@ -1,31 +1,54 @@
 'use client'
-import { Card, CardHeader, CardBody, CardFooter, Avatar, Button } from "@nextui-org/react"
-import { IconEdit, IconHeart, IconMessageCircle, IconRepeat, IconTrash } from '@tabler/icons-react'
+import { Card, CardHeader, CardBody, CardFooter, Avatar, Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react"
+import { IconDotsVertical, IconEdit, IconHeart, IconMessageCircle, IconRepeat, IconTrash } from '@tabler/icons-react'
 import { deletePost } from "../actions/delete-post-action"
 import Link from "next/link"
 import { useState } from "react"
 import { editPost } from "../actions/edit-post-action"
 import { PostCardEditButton } from "./post-card-edit-button"
+import { toast } from "sonner"
+// import { type Session } from '@supabase/auth-helpers-nextjs'
+// import { DropDownTriggerClient } from "./drop-down-trigger-client"
 
 export default function PostCard({
     id,
+    userId,
     userFullName,
     userName,
     avatarUrl,
-    content
+    content,
+    sessionId
 }: {
     id: string
+    userId: string
     userFullName: string
     userName: string
     avatarUrl: string
     content: string
+    sessionId: string
 }) {
-    const [isEditing, setIsEditing] = useState(true)
+    const [isEditing, setIsEditing] = useState(false)
     const [isContentEditing, setIsContentEditing] = useState('')
 
     const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         e.preventDefault()
         setIsContentEditing(e.target.value)
+    }
+
+    const handleDeleteAction = () => {
+        deletePost(id)
+        toast.success("Post eliminado correctamente")
+    }
+
+    const handleEditAction = async (formData: FormData) => {
+        await editPost(formData, id)
+        setIsEditing(!isEditing)
+        toast.success("Post editado correctamente")
+    }
+
+    const handleEditForm = () => {
+        setIsEditing(!isEditing)
+        setIsContentEditing(content)
     }
 
     return (
@@ -41,27 +64,38 @@ export default function PostCard({
                         <h5 className="text-small tracking-tight text-default-400">@{userName} </h5>
                     </div>
                 </div>
-                <div className="flex gap-1">
-                    <button onClick={() => {
-                        setIsEditing(!isEditing)
-                        setIsContentEditing(content)
-                    }}>
-                        <IconEdit className="w-5 h-5 hover:text-sky-700" />
-                    </button>
-                    <button onClick={() => {
-                        deletePost(id)
-                    }}>
-                        <IconTrash className="w-5 h-5 hover:text-red-700" />
-                    </button>
-                </div>
+                {sessionId === userId &&
+                    <Dropdown backdrop="blur">
+                        <DropdownTrigger>
+                            <button className="bg-transparent border-slate-400 hover:border-slate-200 border rounded-full p-1">
+                                <IconDotsVertical />
+                            </button>
+                        </DropdownTrigger>
+                        <DropdownMenu aria-label="Static Actions"
+                            className="p-3">
+                            <DropdownItem key="edit">
+                                <button className="flex gap-4 w-full justify-start"
+                                    onClick={handleEditForm}>
+                                    <IconEdit className="w-5 h-5 mr-2" />
+                                    Editar post
+                                </button>
+                            </DropdownItem>
+
+                            <DropdownItem key="delete" className="text-danger" color="danger">
+                                <button className="flex gap-4 w-full justify-start text-l"
+                                    onClick={handleDeleteAction}>
+                                    <IconTrash className="w-5 h-5 mr-2" />
+                                    Eliminar post
+                                </button>
+                            </DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
+                }
             </CardHeader>
             <CardBody className="px-3 py-0 text-sm text-default-500">
                 {
-                    !isEditing
-                        ? <form action={async (formData) => {
-                            await editPost(formData, id)
-                            setIsEditing(!isEditing)
-                        }} >
+                    isEditing
+                        ? <form action={handleEditAction} >
                             <div className="flex flex-1 flex-col gap-y-4">
                                 <textarea
                                     name="content"
@@ -71,7 +105,7 @@ export default function PostCard({
                                     onChange={handleOnChange}
                                 />
                                 {
-                                    isContentEditing === ''
+                                    isContentEditing === '' || isContentEditing === content
                                         ? <Button
                                             className="bg-sky-800 text-slate-400 text-sm font-bold rounded-full px-5 py-2 self-end transition cursor-not-allowed">
                                             Guardar

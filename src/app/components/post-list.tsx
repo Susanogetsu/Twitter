@@ -1,7 +1,8 @@
+// import { type Session } from '@supabase/auth-helpers-nextjs'
 import PostCard from './post-card'
 import { type Post } from '@/app/types/posts'
 
-export function PostLists({ posts }: { posts: Post[] | null }) {
+export function PostLists({ posts, sessionId }: { posts: Post[] | null, sessionId: string }) {
     return (
         <>
             {
@@ -9,6 +10,7 @@ export function PostLists({ posts }: { posts: Post[] | null }) {
                     const {
                         id,
                         user,
+                        user_id: userId,
                         content
                     } = post
 
@@ -22,10 +24,12 @@ export function PostLists({ posts }: { posts: Post[] | null }) {
                         <PostCard
                             id={id}
                             avatarUrl={avatarUrl}
+                            userId = {userId}
                             content={content}
                             key={id}
                             userFullName={userFullName}
                             userName={userName}
+                            sessionId={sessionId}
                         />
                     )
                 })

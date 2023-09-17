@@ -15,8 +15,6 @@ export function AuthButton({ session }: { session: Session | null }) {
                 redirectTo: 'http://localhost:3000/auth/callback'
             }
         })
-
-        console.log(session)
     }
     const handleSignOut = async () => {
         await supabase.auth.signOut()
